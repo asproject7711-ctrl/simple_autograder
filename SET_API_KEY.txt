@@ -1,0 +1,127 @@
+================================================================================
+  HOW TO SET YOUR OPENAI API KEY - STEP BY STEP
+================================================================================
+
+THE PROBLEM:
+  You're seeing this error:
+  "AI feedback failed: Expecting value: line 1 column 1 (char 0)"
+  
+  This means: OpenAI API key is NOT SET!
+
+================================================================================
+THE SOLUTION (3 STEPS):
+================================================================================
+
+STEP 1: Get Your OpenAI API Key
+--------------------------------
+1. Go to: https://platform.openai.com/api-keys
+2. Sign in (or create a free OpenAI account)
+3. Click "Create new secret key"
+4. Give it a name like "Autograder"
+5. COPY the key (starts with "sk-")
+   ⚠️ IMPORTANT: Save it somewhere - you can only see it once!
+
+STEP 2: Set the Key in PowerShell
+----------------------------------
+In your PowerShell terminal (where the server is running):
+
+$env:OPENAI_API_KEY="sk-paste-your-actual-key-here"
+
+Replace "sk-paste-your-actual-key-here" with your real key!
+
+Example:
+$env:OPENAI_API_KEY="sk-proj-abc123xyz456..."
+
+
+STEP 3: Restart the Server
+---------------------------
+Stop the server (Ctrl+C) and restart it:
+
+uvicorn main:app --reload
+
+OR use the startup script:
+
+.\start_server.ps1
+
+================================================================================
+VERIFY IT WORKED
+================================================================================
+
+After restarting the server, test again:
+
+curl -X POST "http://localhost:8000/autograder/grade_file" `
+  -F "user_id=test" `
+  -F "file=@LANGhello.py"
+
+NOW you should see REAL AI feedback instead of the error!
+
+Expected response:
+{
+  "detected_type": "code",
+  "feedback": "The code is simple and functional...\nFINAL GRADE: 85/100",
+  "grade": 85,
+  "user_id": "test",
+  "filename": "LANGhello.py"
+}
+
+================================================================================
+PERMANENT SOLUTION (Optional)
+================================================================================
+
+To avoid setting the key every time:
+
+Option 1: Create a .env file
+-----------------------------
+1. Create a file named ".env" in the Token-Counter folder
+2. Add this line:
+   OPENAI_API_KEY=sk-your-actual-key-here
+3. The code will automatically load it (python-dotenv is installed)
+
+Option 2: Use the startup script
+---------------------------------
+Edit start_server.ps1 and add your key at the top:
+$env:OPENAI_API_KEY="sk-your-key-here"
+
+Then always start with: .\start_server.ps1
+
+================================================================================
+TROUBLESHOOTING
+================================================================================
+
+Q: Where do I get an API key?
+A: https://platform.openai.com/api-keys
+
+Q: Is it free?
+A: You need to add credits to your OpenAI account. Each grading costs ~$0.002-$0.008
+
+Q: How do I know if it's set?
+A: Run: echo $env:OPENAI_API_KEY
+   Should show: sk-...
+
+Q: Still getting errors after setting the key?
+A: Make sure you:
+   1. Copied the FULL key (starts with sk-)
+   2. Set it in the SAME PowerShell window where you'll run the server
+   3. Restarted the server AFTER setting the key
+
+Q: Invalid API key error?
+A: Check that you copied the key correctly, no extra spaces
+
+================================================================================
+QUICK REFERENCE
+================================================================================
+
+# 1. Set key
+$env:OPENAI_API_KEY="sk-your-key-here"
+
+# 2. Verify it's set
+echo $env:OPENAI_API_KEY
+
+# 3. Start server
+uvicorn main:app --reload
+
+# 4. Test
+# Go to http://localhost:8000/docs and upload a file
+
+================================================================================
+

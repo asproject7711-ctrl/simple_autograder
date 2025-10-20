@@ -1,0 +1,81 @@
+================================================================================
+  HOW TO RESTART THE SERVER
+================================================================================
+
+THE PROBLEM:
+  The server is running OLD code. You need to restart it to load the NEW code
+  with better error messages.
+
+================================================================================
+SOLUTION - RESTART THE SERVER:
+================================================================================
+
+METHOD 1: If you can see the server terminal window
+----------------------------------------------------
+1. Go to the PowerShell window where the server is running
+2. Press Ctrl+C to stop the server
+3. Wait for it to fully stop
+4. Set your API key:
+   $env:OPENAI_API_KEY="sk-your-key-here"
+5. Restart the server:
+   uvicorn main:app --reload
+   
+OR use the startup script:
+   .\start_server.ps1
+
+
+METHOD 2: If you can't find the server window
+----------------------------------------------
+1. Stop all uvicorn processes:
+   Get-Process uvicorn | Stop-Process -Force
+
+2. Wait 3 seconds
+
+3. Set your API key:
+   $env:OPENAI_API_KEY="sk-your-key-here"
+
+4. Start the server fresh:
+   uvicorn main:app --reload
+
+
+METHOD 3: Use the startup script (EASIEST)
+-------------------------------------------
+1. Stop the old server:
+   Get-Process uvicorn | Stop-Process -Force
+
+2. Wait 3 seconds
+
+3. Run the startup script (it will ask for your API key):
+   .\start_server.ps1
+
+================================================================================
+AFTER RESTARTING
+================================================================================
+
+With the NEW code, if your API key is NOT set, you'll see this message:
+
+"feedback": "⚠️ OpenAI API key not configured. Please set OPENAI_API_KEY 
+environment variable. See FIX_API_KEY.md for instructions."
+
+This is MUCH clearer than the old error!
+
+Once you SET your API key and restart, you'll get REAL AI feedback! ✅
+
+================================================================================
+COMPLETE RESTART PROCESS
+================================================================================
+
+# 1. Stop old server
+Get-Process uvicorn | Stop-Process -Force
+
+# 2. Set API key (GET YOUR KEY FROM: https://platform.openai.com/api-keys)
+$env:OPENAI_API_KEY="sk-your-actual-key-here"
+
+# 3. Start new server
+uvicorn main:app --reload
+
+# 4. Test again
+# Go to http://localhost:8000/docs and upload LANGhello.py again
+
+================================================================================
+
